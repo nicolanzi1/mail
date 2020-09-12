@@ -86,6 +86,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/inbox.js":
+/*!**********************!*\
+  !*** ./src/inbox.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const MessageStore = __webpack_require__(/*! ./message_store */ \"./src/message_store.js\");\n\nmodule.exports = {\n    renderMessage(message) {\n        let messageEl = document.createElement(\"li\");\n        messageEl.className = \"message\";\n        messageEl.innerHTML =`\n        <span class='from'>${message.from}</span>\n        <span class=\"subject\">${message.subject}</span> -\n        <span class=\"body\">${message.body}</span>\n        `;\n        return messageEl;\n    },\n    \n    render() {\n        let container = document.createElement(\"ul\");\n        container.className = \"messages\";\n        let messages = MessageStore.getInboxMessages();\n        messages.forEach(message => {\n            container.appendChild(this.renderMessage(message));\n        });\n        return container;\n    }\n};\n\n//# sourceURL=webpack:///./src/inbox.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -93,7 +104,18 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Router = __webpack_require__(/*! ./router */ \"./src/router.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n    let content = document.querySelector(\".content\");\n    router = new Router(content);\n    router.start();\n    let navItems = Array.from(document.querySelectorAll(\".sidebar-nav li\"));\n    navItems.forEach(navItem => {\n        navItem.addEventListener('click', () => {\n            let name = navItem.innerText.toLowerCase();\n            window.location.hash = name;\n        });\n    });\n});\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("const Router = __webpack_require__(/*! ./router */ \"./src/router.js\");\nconst Inbox = __webpack_require__(/*! ./inbox */ \"./src/inbox.js\");\n\nlet routes = {\n    inbox: Inbox\n}\n\ndocument.addEventListener('DOMContentLoaded', () => {\n    let content = document.querySelector(\".content\");\n    router = new Router(content, routes);\n    router.start();\n    window.location.hash = \"#inbox\";\n    let navItems = Array.from(document.querySelectorAll(\".sidebar-nav li\"));\n    navItems.forEach(navItem => {\n        navItem.addEventListener('click', () => {\n            let name = navItem.innerText.toLowerCase();\n            location.hash = name;\n        });\n    });\n});\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/message_store.js":
+/*!******************************!*\
+  !*** ./src/message_store.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("let messages = {\n    sent: [\n        {\n            to: \"friend@nmail.com\",\n            subject: \"Check this out\",\n            body: \"It's so cool\"\n        },\n        { to: \"person@nmail.com\", subject: \"zzz\", body: \"so booring\" }\n    ],\n    inbox: [\n        {\n            from: \"grandma@nmail.com\",\n            subject: \"Fwd: Fwd: Fwd: Check this out\",\n            body: \"Stay at home mom discovers cure for leg cramps. Doctors hate her\"\n        },\n        {\n            from: \"person@nmail.com\",\n            subject: \"Questionnaire\",\n            body: \"Take this free quiz win $1000 dollars\"\n        }\n    ]\n};\n\nconst MessageStore = {\n    getInboxMessages() {\n        return messages.inbox.slice();\n    },\n    getSentMessages() {\n        return messages.sent.slice();\n    }\n}\n\nmodule.exports = MessageStore;\n\n//# sourceURL=webpack:///./src/message_store.js?");
 
 /***/ }),
 
@@ -104,7 +126,7 @@ eval("const Router = __webpack_require__(/*! ./router */ \"./src/router.js\");\n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("class Router {\n    constructor(node) {\n        this.node = node;\n    }\n\n    start() {\n        this.render();\n        window.addEventListener(\"hashchange\", () => {\n            this.render();\n        });\n    }\n\n    render() {\n        this.node.innerHTML = \"\";\n        let component = this.activeRoute();\n        if(component) {\n            this.node.appendChild(component.render());\n        }\n    }\n\n    activeRoute() {\n        let hash = window.location.hash.substr(1);\n        return hash;\n    }\n}\n\nmodule.exports = Router;\n\n//# sourceURL=webpack:///./src/router.js?");
+eval("class Router {\n    constructor(node, routes) {\n        this.node = node;\n        this.routes = routes;\n    }\n\n    start() {\n        this.render();\n        window.addEventListener(\"hashchange\", () => {\n            this.render();\n        });\n    }\n\n    render() {\n        this.node.innerHTML = \"\";\n        let component = this.activeRoute();\n        if(component) {\n            this.node.appendChild(component.render());\n        }\n    }\n\n    activeRoute() {\n        let hash = window.location.hash.substr(1);\n        let component = this.routes[hash];\n        return component;\n    }\n}\n\nmodule.exports = Router;\n\n//# sourceURL=webpack:///./src/router.js?");
 
 /***/ })
 
