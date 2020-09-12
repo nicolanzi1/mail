@@ -1,9 +1,13 @@
-const Router = require('./router');
-const Inbox = require('./inbox');
+let Router = require('./router');
+let Compose = require('./compose');
+let Inbox = require('./inbox');
+let Sent = require('./sent');
 
 let routes = {
-    inbox: Inbox
-}
+    compose: Compose,
+    inbox: Inbox,
+    sent: Sent
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     let content = document.querySelector(".content");
