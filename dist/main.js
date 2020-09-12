@@ -91,9 +91,20 @@
   !*** ./src/index.js ***!
   \**********************/
 /*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Router = __webpack_require__(/*! ./router */ \"./src/router.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n    let content = document.querySelector(\".content\");\n    router = new Router(content);\n    router.start();\n    let navItems = Array.from(document.querySelectorAll(\".sidebar-nav li\"));\n    navItems.forEach(navItem => {\n        navItem.addEventListener('click', () => {\n            let name = navItem.innerText.toLowerCase();\n            window.location.hash = name;\n        });\n    });\n});\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/router.js":
+/*!***********************!*\
+  !*** ./src/router.js ***!
+  \***********************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("console.log(\"It's working\");\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("class Router {\n    constructor(node) {\n        this.node = node;\n    }\n\n    start() {\n        this.render();\n        window.addEventListener(\"hashchange\", () => {\n            this.render();\n        });\n    }\n\n    render() {\n        this.node.innerHTML = \"\";\n        let component = this.activeRoute();\n        if(component) {\n            this.node.appendChild(component.render());\n        }\n    }\n\n    activeRoute() {\n        let hash = window.location.hash.substr(1);\n        return hash;\n    }\n}\n\nmodule.exports = Router;\n\n//# sourceURL=webpack:///./src/router.js?");
 
 /***/ })
 
